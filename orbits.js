@@ -239,7 +239,7 @@ let sun = new Body({
   vy: 0,
   px: 0,
   py: 0,
-  radius: 5,
+  radius: 8,
   linewidth: 3,
   strokestyle: 'yellow'
 });
@@ -289,7 +289,7 @@ let jupiter = new Body({
   vy: 13720,
   px: -740.52e6*1000,
   py: 0,
-  radius: 8,
+  radius: 10,
   linewidth: 1,
   strokestyle: '#CEA089'
 });
@@ -316,6 +316,18 @@ let uranus = new Body({
   radius: 5,
   linewidth: 1,
   strokestyle: '#90979E'
+});
+
+let neptune = new Body({
+  name: "Neptune",
+  mass: 102.413e24,
+  vx: 0,
+  vy: 5500,
+  px: -4444.45e6*1000,
+  py: 0,
+  radius: 7,
+  linewidth: 1,
+  strokestyle: '#2D30CC'
 });
 
 let mars = new Body({
@@ -355,6 +367,7 @@ function solarSystem(){
 	scene.addObject(jupiter);
 	scene.addObject(saturn);
 	scene.addObject(uranus);
+	scene.addObject(neptune);
 	scene.addObject(venus);
 	scene.render();
 	scene.sling();
