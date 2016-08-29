@@ -1,7 +1,7 @@
 const G = 6.67428e-11;
 const AU = (149.6e6 * 1000)
 const SCALE = 250 / AU
-const timestep = 24*3600/2
+const timestep = 24*3600/5
 
 var sling = null;
 var rect;
@@ -13,7 +13,7 @@ class Scene {
     this.height = size.height;
 
     let canvas = document.getElementById('canvas');
-    canvas.width = $(window).width();
+    canvas.width = $(window).width() ;
     canvas.height = $(window).height();
     this.canvas = canvas;
     document.body.appendChild(canvas);
@@ -283,7 +283,7 @@ $(window).bind("resize", function(){
 });
 
 
-const fps = 24;
+const fps = 45;
 function draw() {
 	setTimeout(function() {
 		requestAnimationFrame(draw);

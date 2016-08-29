@@ -7,7 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var G = 6.67428e-11;
 var AU = 149.6e6 * 1000;
 var SCALE = 250 / AU;
-var timestep = 24 * 3600 / 2;
+var timestep = 24 * 3600 / 5;
 
 var _sling = null;
 var rect;
@@ -86,12 +86,6 @@ var Scene = function () {
       var _this2 = this;
 
       this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-
-      this.context.font = '15pt sans';
-      this.context.fillStyle = 'white';
-      this.context.textAlign = 'center';
-      this.context.fillText('Click and hold to shoot planetary bodies into orbit!', this.canvas.width / 2, this.canvas.height - 100);
-      this.context.fillText('Press space to create two tiny blackholes!', this.canvas.width / 2, this.canvas.height - 50);
 
       var changes = [];
       this.objects.forEach(function (o) {
@@ -326,7 +320,7 @@ $(window).bind("resize", function () {
   scene.canvas.height = $(window).height();
 });
 
-var fps = 24;
+var fps = 45;
 function draw() {
   setTimeout(function () {
     requestAnimationFrame(draw);

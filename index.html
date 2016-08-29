@@ -6,10 +6,11 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<title>Orbits</title>
 		<style>
-		html {
+		html,body {
 			height: 100%;
 			width: 100%;
 			border: 0;
+			margin:0;
 			padding: 0;
 		  box-sizing: border-box;
 		}
@@ -17,6 +18,9 @@
 		  box-sizing: inherit;
 		}
 		.overlay{
+			width:100%;
+			position: absolute;
+			bottom: 5%;
 			font-size: 15pt;
 			font-family: "sans";
 			text-align: center;
@@ -24,6 +28,8 @@
 			color:#E1E1CE;
 		}
 		#canvas{
+			margin: 0;
+			padding: 0;
 			position: absolute;
 			background-color: black;
 			z-index: 1;
