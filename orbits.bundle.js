@@ -131,8 +131,8 @@ var Scene = function () {
             mass: 1.989e30 * 5,
             vx: 0,
             vy: 0,
-            px: (mousex - scene.canvas.width / 2) / SCALE,
-            py: (mousey - scene.canvas.height / 2) / SCALE,
+            px: (mousex - scene.canvas.width / 2 - viewx) / SCALE,
+            py: (mousey - scene.canvas.height / 2 - viewy) / SCALE,
             radius: 3,
             linewidth: 3,
             strokestyle: 'white'
@@ -245,8 +245,8 @@ var Slingshot = function () {
         mass: Math.pow(size, 25),
         vx: (this.options.px - this.options.px2) * 500,
         vy: (this.options.py - this.options.py2) * 500,
-        px: (this.options.px - scene.canvas.width / 2) / SCALE,
-        py: (this.options.py - scene.canvas.height / 2) / SCALE,
+        px: (this.options.px - scene.canvas.width / 2 - viewx) / SCALE,
+        py: (this.options.py - scene.canvas.height / 2 - viewy) / SCALE,
         radius: Math.ceil(size),
         linewidth: 1,
         strokestyle: '#' + (Math.floor(Math.random() * 156) + 100).toString(16) + (Math.floor(Math.random() * 156) + 100).toString(16) + (Math.floor(Math.random() * 156) + 100).toString(16)
