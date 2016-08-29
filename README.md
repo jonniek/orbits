@@ -7,4 +7,4 @@ https://donmaiq.github.io/orbits/
   
 Or download index.html and orbits.bundle.js into same directory and open index.html in a browser.  
 
-![alt text](https://thumbs.gfycat.com/AngryBigheartedArrowworm-size_restricted.gif "Screenshot")
+![alt text](https://fat.gfycat.com/WeeTightBushsqueaker.gif "Screenshot")
