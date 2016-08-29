@@ -64,12 +64,6 @@ class Scene {
   render() {
     this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
-    this.context.font = '15pt sans';
-    this.context.fillStyle = 'white';
-    this.context.textAlign = 'center';
-    this.context.fillText('Click and hold to shoot planetary bodies into orbit!', this.canvas.width/2, this.canvas.height - 100);
-    this.context.fillText('Press space to create two tiny blackholes!', this.canvas.width/2, this.canvas.height - 50);
-
     const changes = [];
     this.objects.forEach( o => {
     	let total = [0,0];

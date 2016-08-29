@@ -16,6 +16,13 @@
 		*, *:before, *:after {
 		  box-sizing: inherit;
 		}
+		.overlay{
+			font-size: 15pt;
+			font-family: "sans";
+			text-align: center;
+			z-index: 2;
+			color:#E1E1CE;
+		}
 		#canvas{
 			position: absolute;
 			background-color: black;
@@ -25,6 +32,10 @@
 	</head>
 	<body id="body">
 	<canvas id="canvas" width="800" height="800"></canvas>
+	<div class="overlay">
+		<div>Click and hold to shoot planetary bodies into orbit!</div>
+		<div>Press space to create two tiny blackholes!</div>
+	</div>
 	</body>
 	<script src="orbits.bundle.js"></script>
 </html>
