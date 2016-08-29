@@ -17,13 +17,17 @@
 		*, *:before, *:after {
 		  box-sizing: inherit;
 		}
+		#ham{
+			color:white;
+			widows:;
+		}
 		.overlay{
-			width:100%;
 			position: absolute;
-			bottom: 5%;
+			left:10px;
+			top:10px;
 			font-size: 15pt;
 			font-family: "sans";
-			text-align: center;
+			text-align: left;
 			z-index: 2;
 			color:#E1E1CE;
 			-webkit-touch-callout: none; /* iOS Safari */
@@ -34,6 +38,7 @@
 		  user-select: none; 
 		  cursor: default;
 		}
+		#menuitems{display: none;}
 		#canvas{
 			margin: 0;
 			padding: 0;
@@ -42,12 +47,25 @@
 			z-index: 1;
 		}
 		</style>
+		<script>
+			$(document).ready(function(){
+		  	$('#menu').click(function(){
+		      $('#menuitems').toggle();
+	      });
+		  });
+		</script>
 	</head>
 	<body id="body">
 	<canvas id="canvas" width="800" height="800"></canvas>
 	<div class="overlay">
-		<div>Click and hold to shoot planetary bodies into orbit!</div>
-		<div>Press space to create two tiny blackholes!</div>
+		<img id="menu" src="assets/ham.svg">
+		<div id="menuitems">
+			<div>[Click and drag] - shoot planetary bodies</div>
+			<div>[space] - spawn 2 new Suns</div>
+			<div>[b] - spawn blackhole on mouse</div>
+			<div>[+/-] - zoom map</div>
+			<div>[arrow keys] - move map</div>
+		</div>
 	</div>
 	</body>
 	<script src="orbits.bundle.js"></script>

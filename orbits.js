@@ -1,6 +1,7 @@
 const G = 6.67428e-11;
 const AU = (149.6e6 * 1000)
-const SCALE = 250 / AU
+var scalevalue = 50;
+var SCALE = scalevalue / AU
 const timestep = 24*3600/5
 
 var sling = null;
@@ -25,13 +26,8 @@ class Scene {
     this.objects.push(object);
   }
 
-  removeObject(object) {
-  	this.objects.forEach((o, i) => {
-  		if(object==o){
-  			this.object.splice(i,1);
-  			return;
-  		}
-  	})
+  resetObject(){
+  	this.objects = [];
   }
 
   // returns force exerted on this body by the other body
@@ -103,7 +99,26 @@ class Scene {
     });
 
 		document.body.onkeyup = function(e){
-	    if(e.keyCode == 32){
+		}
+
+		document.body.onkeyup = function(e){
+			console.log(e.keyCode);
+			if(e.keyCode == 66){
+				console.log(mousex, mousey)
+				var blackhole = new Body({
+				  name: "Blackhole",
+				  mass: 1.989e30 * 5,
+				  vx: 0,
+				  vy: 0,
+				  px: (mousex - scene.canvas.width/2) /SCALE,
+				  py: (mousey - scene.canvas.height/2) /SCALE,
+				  radius: 3,
+				  linewidth: 3,
+				  strokestyle: 'white'
+				});
+				scene.addObject(blackhole);
+				console.log(scene.objects);
+			}else if(e.keyCode == 32){
 		  	let body = new Body({
 				  name: "White hole",
 				  mass: 1.989e30,
@@ -111,9 +126,9 @@ class Scene {
 				  vy: 0,
 				  px: 0,
 				  py: -1*AU,
-		  		radius: 11,
+		  		radius: 5,
 		  		linewidth: 1,
-		  		strokestyle: '#fff'
+		  		strokestyle: '#FF0'
 				});
 				scene.addObject(body);
 		  	let body2 = new Body({
@@ -123,9 +138,9 @@ class Scene {
 				  vy: 0,
 				  px: 0,
 				  py: 1*AU,
-		  		radius: 11,
+		  		radius: 5,
 		  		linewidth: 1,
-		  		strokestyle: '#fff'
+		  		strokestyle: '#FF0'
 				});
 				scene.addObject(body2);
 	    }
@@ -157,8 +172,8 @@ class Body {
 
     context.beginPath();
     context.arc(
-      this.options.px*SCALE + scene.canvas.width/2,
-      this.options.py*SCALE + scene.canvas.height/2,
+      this.options.px*SCALE + scene.canvas.width/2 + viewx,
+      this.options.py*SCALE + scene.canvas.height/2 + viewy,
       this.options.radius,
       0,
       2*Math.PI,
@@ -190,7 +205,7 @@ class Slingshot {
   shoot(){
   	let size = Math.random()*6 + 1;
   	let body = new Body({
-		  name: "Black hole",
+		  name: "Body",
 		  mass: Math.pow(size,25),
 		  vx: (this.options.px - this.options.px2) * 500,
 		  vy: (this.options.py - this.options.py2) * 500,
@@ -206,7 +221,6 @@ class Slingshot {
   }
 
   draw(context) {
-  	console.log(context);
     this.context = context;
     if (this.context == null) return false;
 
@@ -235,51 +249,170 @@ let earth = new Body({
   name: "Earth",
   mass: 5.972e24,
   vx: 0,
-  vy: 29783,
-  px: -1*AU,
+  vy: 30290,
+  px: -147.09e6*1000,
   py: 0,
-  radius: 2,
+  radius: 3,
   linewidth: 1,
-  strokestyle: 'lightblue'
+  strokestyle: '#60a6d4'
+});
+
+let moon = new Body({
+  name: "Moon",
+  mass: 0.07346e24,
+  vx: 0,
+  vy: 31366,
+  px: -147.4533e6*1000,
+  py: 0,
+  radius: 1,
+  linewidth: 1,
+  strokestyle: '#E2E6E7'
 });
 
 
 let mercury = new Body({
   name: "Mercury",
   mass: 0.330e24,
-  vx: 47400,
-  vy: 0,
-  px: 0,
-  py: 57.9e6*1000,
+  vx: 0,
+  vy: 58980,
+  px: -46e6*1000,
+  py: 0,
   radius: 2,
   linewidth: 1,
-  strokestyle: '#956e46'
+  strokestyle: '#736E52'
+});
+
+let jupiter = new Body({
+  name: "Jupiter",
+  mass: 1898.19e24,
+  vx: 0,
+  vy: 13720,
+  px: -740.52e6*1000,
+  py: 0,
+  radius: 8,
+  linewidth: 1,
+  strokestyle: '#CEA089'
+});
+
+let saturn = new Body({
+  name: "saturn",
+  mass: 568.34e24,
+  vx: 0,
+  vy: 10180,
+  px: -1352.55e6*1000,
+  py: 0,
+  radius: 5,
+  linewidth: 1,
+  strokestyle: '#91987B'
+});
+
+let uranus = new Body({
+  name: "uranus",
+  mass: 86.813e24,
+  vx: 0,
+  vy: 7110,
+  px: -2741.30e6*1000,
+  py: 0,
+  radius: 5,
+  linewidth: 1,
+  strokestyle: '#90979E'
+});
+
+let mars = new Body({
+  name: "Mars",
+  mass: 0.64171e24,
+  vx: 0,
+  vy: 26500,
+  px: -206.62e6*1000,
+  py: 0,
+  radius: 2,
+  linewidth: 1,
+  strokestyle: '#BF5B2D'
 });
 
 let venus = new Body({
   name: "Venus",
   mass: 4.87e24,
   vx: 0,
-  vy: -35000,
-  px: 108.2e6*1000,
+  vy: 35260,
+  px: -107.48e6*1000,
   py: 0,
   radius: 2,
   linewidth: 1,
-  strokestyle: '#BBBF67'
+  strokestyle: '#CFAA60'
 });
 
-let scene = new Scene();
-scene.addObject(sun);
-scene.addObject(earth);
-scene.addObject(mercury);
-scene.addObject(venus);
-scene.render();
-scene.sling();
+const scene = new Scene();
+
+
+function solarSystem(){
+	scene.resetObject();
+	scene.addObject(sun);
+	scene.addObject(earth);
+	scene.addObject(moon);
+	scene.addObject(mercury);
+	scene.addObject(mars);
+	scene.addObject(jupiter);
+	scene.addObject(saturn);
+	scene.addObject(uranus);
+	scene.addObject(venus);
+	scene.render();
+	scene.sling();
+}
 
 
 $(window).bind("resize", function(){
 	scene.canvas.width = $(window).width();
 	scene.canvas.height = $(window).height();
+});
+
+var mousex = 0;
+var mousey = 0;
+
+$(window).mousemove(function(e) {
+		mousex = e.pageX - rect.left;
+		mousey = e.pageY - rect.top;
+});
+
+
+var viewx = 0;
+var viewy = 0;
+
+$(window).keydown(function(e) {
+		switch(e.which) { 
+			case 171:
+				if(scalevalue<5){
+					scalevalue = scalevalue*2
+				}else{
+        	scalevalue += 3;
+       	}
+        SCALE = scalevalue / AU
+        break;
+    	case 173:
+    		console.log(scalevalue);
+    		if(scalevalue<5){
+    			scalevalue = scalevalue / 2;
+    		}else{
+        	scalevalue -= 3;
+
+    		}
+        SCALE = scalevalue / AU
+        break;
+      case 37:
+    		viewx += 10;
+        break;
+      case 39:
+    		viewx -= 10;
+        break;
+      case 38:
+    		viewy += 10;
+        break;
+      case 40:
+    		viewy -= 10;
+        break;
+    	default: return;
+    }
+    e.preventDefault();
 });
 
 
@@ -291,4 +424,5 @@ function draw() {
 		scene.render()
 	}, 1000 / fps);
 }
+solarSystem();
 draw();

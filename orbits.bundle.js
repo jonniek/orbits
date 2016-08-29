@@ -6,7 +6,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var G = 6.67428e-11;
 var AU = 149.6e6 * 1000;
-var SCALE = 250 / AU;
+var scalevalue = 50;
+var SCALE = scalevalue / AU;
 var timestep = 24 * 3600 / 5;
 
 var _sling = null;
@@ -39,16 +40,9 @@ var Scene = function () {
       this.objects.push(object);
     }
   }, {
-    key: 'removeObject',
-    value: function removeObject(object) {
-      var _this = this;
-
-      this.objects.forEach(function (o, i) {
-        if (object == o) {
-          _this.object.splice(i, 1);
-          return;
-        }
-      });
+    key: 'resetObject',
+    value: function resetObject() {
+      this.objects = [];
     }
 
     // returns force exerted on this body by the other body
@@ -83,16 +77,16 @@ var Scene = function () {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
       this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
       var changes = [];
       this.objects.forEach(function (o) {
         var total = [0, 0];
-        _this2.objects.forEach(function (o2) {
+        _this.objects.forEach(function (o2) {
           if (o !== o2) {
-            var tmp = _this2.attraction(o, o2);
+            var tmp = _this.attraction(o, o2);
             total[0] += tmp[0];
             total[1] += tmp[1];
           }
@@ -100,10 +94,10 @@ var Scene = function () {
         changes.push(total);
       });
       changes.forEach(function (change, index) {
-        _this2.objects[index].updateV(change[0], change[1]);
+        _this.objects[index].updateV(change[0], change[1]);
       });
       this.objects.forEach(function (o) {
-        o.draw(_this2.context);
+        o.draw(_this.context);
       });
       if (_sling != null) _sling.draw(this.context);
     }
@@ -126,8 +120,26 @@ var Scene = function () {
         _sling = null;
       });
 
+      document.body.onkeyup = function (e) {};
+
       document.body.onkeyup = function (e) {
-        if (e.keyCode == 32) {
+        console.log(e.keyCode);
+        if (e.keyCode == 66) {
+          console.log(mousex, mousey);
+          var blackhole = new Body({
+            name: "Blackhole",
+            mass: 1.989e30 * 5,
+            vx: 0,
+            vy: 0,
+            px: (mousex - scene.canvas.width / 2) / SCALE,
+            py: (mousey - scene.canvas.height / 2) / SCALE,
+            radius: 3,
+            linewidth: 3,
+            strokestyle: 'white'
+          });
+          scene.addObject(blackhole);
+          console.log(scene.objects);
+        } else if (e.keyCode == 32) {
           var body = new Body({
             name: "White hole",
             mass: 1.989e30,
@@ -135,9 +147,9 @@ var Scene = function () {
             vy: 0,
             px: 0,
             py: -1 * AU,
-            radius: 11,
+            radius: 5,
             linewidth: 1,
-            strokestyle: '#fff'
+            strokestyle: '#FF0'
           });
           scene.addObject(body);
           var body2 = new Body({
@@ -147,9 +159,9 @@ var Scene = function () {
             vy: 0,
             px: 0,
             py: 1 * AU,
-            radius: 11,
+            radius: 5,
             linewidth: 1,
-            strokestyle: '#fff'
+            strokestyle: '#FF0'
           });
           scene.addObject(body2);
         }
@@ -189,7 +201,7 @@ var Body = function () {
       context.fillStyle = this.options.strokestyle;
 
       context.beginPath();
-      context.arc(this.options.px * SCALE + scene.canvas.width / 2, this.options.py * SCALE + scene.canvas.height / 2, this.options.radius, 0, 2 * Math.PI, false);
+      context.arc(this.options.px * SCALE + scene.canvas.width / 2 + viewx, this.options.py * SCALE + scene.canvas.height / 2 + viewy, this.options.radius, 0, 2 * Math.PI, false);
       context.fill();
     }
   }]);
@@ -207,21 +219,21 @@ var Slingshot = function () {
   _createClass(Slingshot, [{
     key: 'unfollow',
     value: function unfollow() {
-      var _this3 = this;
+      var _this2 = this;
 
       window.removeEventListener('mousemove', function (e) {
-        _this3.options.px2 = e.pageX - rect.left;
-        _this3.options.py2 = e.pageY - rect.top;
+        _this2.options.px2 = e.pageX - rect.left;
+        _this2.options.py2 = e.pageY - rect.top;
       });
     }
   }, {
     key: 'followToMouse',
     value: function followToMouse() {
-      var _this4 = this;
+      var _this3 = this;
 
       window.addEventListener('mousemove', function (e) {
-        _this4.options.px2 = e.pageX - rect.left;
-        _this4.options.py2 = e.pageY - rect.top;
+        _this3.options.px2 = e.pageX - rect.left;
+        _this3.options.py2 = e.pageY - rect.top;
       });
     }
   }, {
@@ -229,7 +241,7 @@ var Slingshot = function () {
     value: function shoot() {
       var size = Math.random() * 6 + 1;
       var body = new Body({
-        name: "Black hole",
+        name: "Body",
         mass: Math.pow(size, 25),
         vx: (this.options.px - this.options.px2) * 500,
         vy: (this.options.py - this.options.py2) * 500,
@@ -244,7 +256,6 @@ var Slingshot = function () {
   }, {
     key: 'draw',
     value: function draw(context) {
-      console.log(context);
       this.context = context;
       if (this.context == null) return false;
 
@@ -275,49 +286,166 @@ var earth = new Body({
   name: "Earth",
   mass: 5.972e24,
   vx: 0,
-  vy: 29783,
-  px: -1 * AU,
+  vy: 30290,
+  px: -147.09e6 * 1000,
   py: 0,
-  radius: 2,
+  radius: 3,
   linewidth: 1,
-  strokestyle: 'lightblue'
+  strokestyle: '#60a6d4'
+});
+
+var moon = new Body({
+  name: "Moon",
+  mass: 0.07346e24,
+  vx: 0,
+  vy: 31366,
+  px: -147.4533e6 * 1000,
+  py: 0,
+  radius: 1,
+  linewidth: 1,
+  strokestyle: '#E2E6E7'
 });
 
 var mercury = new Body({
   name: "Mercury",
   mass: 0.330e24,
-  vx: 47400,
-  vy: 0,
-  px: 0,
-  py: 57.9e6 * 1000,
+  vx: 0,
+  vy: 58980,
+  px: -46e6 * 1000,
+  py: 0,
   radius: 2,
   linewidth: 1,
-  strokestyle: '#956e46'
+  strokestyle: '#736E52'
+});
+
+var jupiter = new Body({
+  name: "Jupiter",
+  mass: 1898.19e24,
+  vx: 0,
+  vy: 13720,
+  px: -740.52e6 * 1000,
+  py: 0,
+  radius: 8,
+  linewidth: 1,
+  strokestyle: '#CEA089'
+});
+
+var saturn = new Body({
+  name: "saturn",
+  mass: 568.34e24,
+  vx: 0,
+  vy: 10180,
+  px: -1352.55e6 * 1000,
+  py: 0,
+  radius: 5,
+  linewidth: 1,
+  strokestyle: '#91987B'
+});
+
+var uranus = new Body({
+  name: "uranus",
+  mass: 86.813e24,
+  vx: 0,
+  vy: 7110,
+  px: -2741.30e6 * 1000,
+  py: 0,
+  radius: 5,
+  linewidth: 1,
+  strokestyle: '#90979E'
+});
+
+var mars = new Body({
+  name: "Mars",
+  mass: 0.64171e24,
+  vx: 0,
+  vy: 26500,
+  px: -206.62e6 * 1000,
+  py: 0,
+  radius: 2,
+  linewidth: 1,
+  strokestyle: '#BF5B2D'
 });
 
 var venus = new Body({
   name: "Venus",
   mass: 4.87e24,
   vx: 0,
-  vy: -35000,
-  px: 108.2e6 * 1000,
+  vy: 35260,
+  px: -107.48e6 * 1000,
   py: 0,
   radius: 2,
   linewidth: 1,
-  strokestyle: '#BBBF67'
+  strokestyle: '#CFAA60'
 });
 
 var scene = new Scene();
-scene.addObject(sun);
-scene.addObject(earth);
-scene.addObject(mercury);
-scene.addObject(venus);
-scene.render();
-scene.sling();
+
+function solarSystem() {
+  scene.resetObject();
+  scene.addObject(sun);
+  scene.addObject(earth);
+  scene.addObject(moon);
+  scene.addObject(mercury);
+  scene.addObject(mars);
+  scene.addObject(jupiter);
+  scene.addObject(saturn);
+  scene.addObject(uranus);
+  scene.addObject(venus);
+  scene.render();
+  scene.sling();
+}
 
 $(window).bind("resize", function () {
   scene.canvas.width = $(window).width();
   scene.canvas.height = $(window).height();
+});
+
+var mousex = 0;
+var mousey = 0;
+
+$(window).mousemove(function (e) {
+  mousex = e.pageX - rect.left;
+  mousey = e.pageY - rect.top;
+});
+
+var viewx = 0;
+var viewy = 0;
+
+$(window).keydown(function (e) {
+  switch (e.which) {
+    case 171:
+      if (scalevalue < 5) {
+        scalevalue = scalevalue * 2;
+      } else {
+        scalevalue += 3;
+      }
+      SCALE = scalevalue / AU;
+      break;
+    case 173:
+      console.log(scalevalue);
+      if (scalevalue < 5) {
+        scalevalue = scalevalue / 2;
+      } else {
+        scalevalue -= 3;
+      }
+      SCALE = scalevalue / AU;
+      break;
+    case 37:
+      viewx += 10;
+      break;
+    case 39:
+      viewx -= 10;
+      break;
+    case 38:
+      viewy += 10;
+      break;
+    case 40:
+      viewy -= 10;
+      break;
+    default:
+      return;
+  }
+  e.preventDefault();
 });
 
 var fps = 45;
@@ -328,4 +456,5 @@ function draw() {
     scene.render();
   }, 1000 / fps);
 }
+solarSystem();
 draw();
