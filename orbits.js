@@ -1,8 +1,12 @@
 const G = 6.67428e-11;
 const AU = (149.6e6 * 1000)
 var scalevalue = 50;
+var speedvalue = 5;
 var SCALE = scalevalue / AU
-const timestep = 24*3600/5
+var timestep = 24*3600/speedvalue
+
+var viewx = 0;
+var viewy = 0;
 
 var sling = null;
 var rect;
@@ -57,24 +61,25 @@ class Scene {
   	return [Fx, Fy]
   }
 
-  render() {
+  render(paused) {
     this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-
-    const changes = [];
-    this.objects.forEach( o => {
-    	let total = [0,0];
-    	this.objects.forEach(o2 =>{
-    		if (o!==o2) {
-	    		let tmp = this.attraction(o, o2);
-	    		total[0] += tmp[0];
-	    		total[1] += tmp[1];
-    		}
-    	});
-    	changes.push(total);
-    });
-  	changes.forEach((change, index) => {
-  		this.objects[index].updateV(change[0], change[1]);
-  	});
+    if (!paused){
+      const changes = [];
+      this.objects.forEach( o => {
+        let total = [0,0];
+        this.objects.forEach(o2 =>{
+          if (o!==o2) {
+            let tmp = this.attraction(o, o2);
+            total[0] += tmp[0];
+            total[1] += tmp[1];
+          }
+        });
+        changes.push(total);
+      });
+      changes.forEach((change, index) => {
+        this.objects[index].updateV(change[0], change[1]);
+      });
+    }
     this.objects.forEach( o => {
       o.draw(this.context);
     });
@@ -232,145 +237,153 @@ class Slingshot {
   }
 }
 
-let sun = new Body({
-  name: "Sun",
-  mass: 1.989e30,
-  vx: 0,
-  vy: 0,
-  px: 0,
-  py: 0,
-  radius: 8,
-  linewidth: 3,
-  strokestyle: 'yellow'
-});
-
-
-let earth = new Body({
-  name: "Earth",
-  mass: 5.972e24,
-  vx: 0,
-  vy: 30290,
-  px: -147.09e6*1000,
-  py: 0,
-  radius: 3,
-  linewidth: 1,
-  strokestyle: '#60a6d4'
-});
-
-let moon = new Body({
-  name: "Moon",
-  mass: 0.07346e24,
-  vx: 0,
-  vy: 31366,
-  px: -147.4533e6*1000,
-  py: 0,
-  radius: 1,
-  linewidth: 1,
-  strokestyle: '#E2E6E7'
-});
-
-
-let mercury = new Body({
-  name: "Mercury",
-  mass: 0.330e24,
-  vx: 0,
-  vy: 58980,
-  px: -46e6*1000,
-  py: 0,
-  radius: 2,
-  linewidth: 1,
-  strokestyle: '#736E52'
-});
-
-let jupiter = new Body({
-  name: "Jupiter",
-  mass: 1898.19e24,
-  vx: 0,
-  vy: 13720,
-  px: -740.52e6*1000,
-  py: 0,
-  radius: 10,
-  linewidth: 1,
-  strokestyle: '#CEA089'
-});
-
-let saturn = new Body({
-  name: "saturn",
-  mass: 568.34e24,
-  vx: 0,
-  vy: 10180,
-  px: -1352.55e6*1000,
-  py: 0,
-  radius: 5,
-  linewidth: 1,
-  strokestyle: '#91987B'
-});
-
-let uranus = new Body({
-  name: "uranus",
-  mass: 86.813e24,
-  vx: 0,
-  vy: 7110,
-  px: -2741.30e6*1000,
-  py: 0,
-  radius: 5,
-  linewidth: 1,
-  strokestyle: '#90979E'
-});
-
-let neptune = new Body({
-  name: "Neptune",
-  mass: 102.413e24,
-  vx: 0,
-  vy: 5500,
-  px: -4444.45e6*1000,
-  py: 0,
-  radius: 7,
-  linewidth: 1,
-  strokestyle: '#2D30CC'
-});
-
-let mars = new Body({
-  name: "Mars",
-  mass: 0.64171e24,
-  vx: 0,
-  vy: 26500,
-  px: -206.62e6*1000,
-  py: 0,
-  radius: 2,
-  linewidth: 1,
-  strokestyle: '#BF5B2D'
-});
-
-let venus = new Body({
-  name: "Venus",
-  mass: 4.87e24,
-  vx: 0,
-  vy: 35260,
-  px: -107.48e6*1000,
-  py: 0,
-  radius: 2,
-  linewidth: 1,
-  strokestyle: '#CFAA60'
-});
 
 const scene = new Scene();
+scene.sling();
 
 
-function solarSystem(){
-	scene.resetObject();
-	scene.addObject(sun);
-	scene.addObject(earth);
-	scene.addObject(moon);
-	scene.addObject(mercury);
-	scene.addObject(mars);
-	scene.addObject(jupiter);
-	scene.addObject(saturn);
-	scene.addObject(uranus);
-	scene.addObject(neptune);
-	scene.addObject(venus);
-	scene.render();
-	scene.sling();
+function setState(id){
+  scalevalue = 50;
+  SCALE = scalevalue / AU
+  viewx = 0;
+  viewy = 0;
+
+  scene.resetObject();
+  if (id === 1){
+    let sun = new Body({
+      name: "Sun",
+      mass: 1.989e30,
+      vx: 0,
+      vy: 0,
+      px: 0,
+      py: 0,
+      radius: 8,
+      linewidth: 3,
+      strokestyle: 'yellow'
+    });
+
+
+    let earth = new Body({
+      name: "Earth",
+      mass: 5.972e24,
+      vx: 0,
+      vy: 30290,
+      px: -147.09e6*1000,
+      py: 0,
+      radius: 3,
+      linewidth: 1,
+      strokestyle: '#60a6d4'
+    });
+
+    let moon = new Body({
+      name: "Moon",
+      mass: 0.07346e24,
+      vx: 0,
+      vy: 31366,
+      px: -147.4533e6*1000,
+      py: 0,
+      radius: 1,
+      linewidth: 1,
+      strokestyle: '#E2E6E7'
+    });
+
+
+    let mercury = new Body({
+      name: "Mercury",
+      mass: 0.330e24,
+      vx: 0,
+      vy: 58980,
+      px: -46e6*1000,
+      py: 0,
+      radius: 2,
+      linewidth: 1,
+      strokestyle: '#736E52'
+    });
+
+    let jupiter = new Body({
+      name: "Jupiter",
+      mass: 1898.19e24,
+      vx: 0,
+      vy: 13720,
+      px: -740.52e6*1000,
+      py: 0,
+      radius: 10,
+      linewidth: 1,
+      strokestyle: '#CEA089'
+    });
+
+    let saturn = new Body({
+      name: "saturn",
+      mass: 568.34e24,
+      vx: 0,
+      vy: 10180,
+      px: -1352.55e6*1000,
+      py: 0,
+      radius: 5,
+      linewidth: 1,
+      strokestyle: '#91987B'
+    });
+
+    let uranus = new Body({
+      name: "uranus",
+      mass: 86.813e24,
+      vx: 0,
+      vy: 7110,
+      px: -2741.30e6*1000,
+      py: 0,
+      radius: 5,
+      linewidth: 1,
+      strokestyle: '#90979E'
+    });
+
+    let neptune = new Body({
+      name: "Neptune",
+      mass: 102.413e24,
+      vx: 0,
+      vy: 5500,
+      px: -4444.45e6*1000,
+      py: 0,
+      radius: 7,
+      linewidth: 1,
+      strokestyle: '#2D30CC'
+    });
+
+    let mars = new Body({
+      name: "Mars",
+      mass: 0.64171e24,
+      vx: 0,
+      vy: 26500,
+      px: -206.62e6*1000,
+      py: 0,
+      radius: 2,
+      linewidth: 1,
+      strokestyle: '#BF5B2D'
+    });
+
+    let venus = new Body({
+      name: "Venus",
+      mass: 4.87e24,
+      vx: 0,
+      vy: 35260,
+      px: -107.48e6*1000,
+      py: 0,
+      radius: 2,
+      linewidth: 1,
+      strokestyle: '#CFAA60'
+    });
+
+    scene.addObject(sun);
+    scene.addObject(earth);
+    scene.addObject(moon);
+    scene.addObject(mercury);
+    scene.addObject(mars);
+    scene.addObject(jupiter);
+    scene.addObject(saturn);
+    scene.addObject(uranus);
+    scene.addObject(neptune);
+    scene.addObject(venus);
+  }
+  scene.render();
 }
 
 
@@ -388,10 +401,8 @@ $(window).mousemove(function(e) {
 });
 
 
-var viewx = 0;
-var viewy = 0;
-
 $(window).keydown(function(e) {
+    console.log(e.which);
 		switch(e.which) { 
 			case 171:
 				if(scalevalue<5){
@@ -402,7 +413,6 @@ $(window).keydown(function(e) {
         SCALE = scalevalue / AU
         break;
     	case 173:
-    		console.log(scalevalue);
     		if(scalevalue<5){
     			scalevalue = scalevalue / 2;
     		}else{
@@ -421,21 +431,38 @@ $(window).keydown(function(e) {
     		viewy += 10;
         break;
       case 40:
-    		viewy -= 10;
+        viewy -= 10;
+        break;
+      case 82:
+        setState(1);
+        break;
+      case 80:
+        running = !running;
         break;
     	default: return;
     }
     e.preventDefault();
 });
 
+function changespeed(e){
+  speedvalue = e;
+  timestep = 24*3600/speedvalue
+}
 
-const fps = 45;
+function changefps(e){
+  fps = e;
+}
+
+var fps = 45;
+
+var running = false;
+
 function draw() {
 	setTimeout(function() {
 		requestAnimationFrame(draw);
 
-		scene.render()
+		scene.render(running)
 	}, 1000 / fps);
 }
-solarSystem();
+setState(1, scene);
 draw();
