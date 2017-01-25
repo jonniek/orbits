@@ -38,6 +38,9 @@
 		  user-select: none; 
 		  cursor: default;
 		}
+		.overlay.text{
+			left: 50px;
+		}
 		#menuitems{display: none;}
 		#canvas{
 			margin: 0;
@@ -58,11 +61,14 @@
 		</script>
 	</head>
 	<body id="body">
+
+	<div id="mass" class="overlay text">3e+24</div>
 	<canvas id="canvas" width="800" height="800"></canvas>
 	<div class="overlay">
 		<img id="menu" src="assets/ham.svg">
 		<div id="menuitems">
 			<div>[Click and drag] - shoot planetary bodies</div>
+			<div>[0-9] - set shot body mass</div>
 			<div>[space] - spawn 2 new Suns</div>
 			<div>[b] - spawn blackhole on mouse</div>
 			<div>[+/-] - zoom map</div>

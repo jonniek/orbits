@@ -13,14 +13,15 @@ var timestep = 24 * 3600 / speedvalue;
 
 var viewx = 0;
 var viewy = 0;
+var mass = 3e+24;
+var massIndex = 24;
 
 var _sling = null;
 var rect;
 
 var Scene = function () {
   function Scene() {
-    var size = arguments.length <= 0 || arguments[0] === undefined ? { width: 900, height: 600 } : arguments[0];
-    var options = arguments.length <= 1 || arguments[1] === undefined ? { zIndex: 1 } : arguments[1];
+    var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { width: 900, height: 600 };
 
     _classCallCheck(this, Scene);
 
@@ -42,6 +43,13 @@ var Scene = function () {
     key: 'addObject',
     value: function addObject(object) {
       this.objects.push(object);
+    }
+  }, {
+    key: 'removeObject',
+    value: function removeObject(obj) {
+      this.objects = this.objects.filter(function (item) {
+        return item !== obj;
+      });
     }
   }, {
     key: 'resetObject',
@@ -191,6 +199,9 @@ var Body = function () {
     value: function updateV(x, y) {
       this.options.vx += x / this.options.mass * timestep;
       this.options.vy += y / this.options.mass * timestep;
+      if (Math.sqrt(Math.pow(this.options.vy, 2) + Math.pow(this.options.vx, 2)) > 299792458) {
+        console.log("Error exceeded speed of light", Math.sqrt(Math.pow(this.options.vy, 2) + Math.pow(this.options.vx, 2)));
+      }
       this.updateP();
     }
   }, {
@@ -246,10 +257,10 @@ var Slingshot = function () {
   }, {
     key: 'shoot',
     value: function shoot() {
-      var size = Math.random() * 6 + 1;
+      var size = massIndex / 2 - 9 + Math.random() * 3;
       var body = new Body({
-        name: "Body",
-        mass: Math.pow(size, 25),
+        name: randomName(Math.ceil(Math.random() * 5) + 3),
+        mass: mass,
         vx: (this.options.px - this.options.px2) * 500,
         vy: (this.options.py - this.options.py2) * 500,
         px: (this.options.px - scene.canvas.width / 2 - viewx) / SCALE,
@@ -276,6 +287,17 @@ var Slingshot = function () {
 
   return Slingshot;
 }();
+
+function randomName(length) {
+  return "asd";
+  var x = "";
+  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < length; i++) {
+    x += possible.charAt(Math.floor(Math.random() * possible.length));
+    if (i == 0) x.toUpperCase();
+  }
+  return x;
+}
 
 var scene = new Scene();
 scene.sling();
@@ -467,16 +489,59 @@ $(window).keydown(function (e) {
       viewy -= 10;
       break;
     case 82:
+      setMass(24);
       setState(1);
       break;
     case 80:
       running = !running;
       break;
+
+    case 72:
+      scene.removeObject();
+      break;
+
+    case 48:
+      setMass(18);
+      break;
+    case 49:
+      setMass(20);
+      break;
+    case 50:
+      setMass(22);
+      break;
+    case 51:
+      setMass(24);
+      break;
+    case 52:
+      setMass(26);
+      break;
+    case 53:
+      setMass(28);
+      break;
+    case 54:
+      setMass(30);
+      break;
+    case 55:
+      setMass(32);
+      break;
+    case 56:
+      setMass(34);
+      break;
+    case 57:
+      setMass(36);
+      break;
+
     default:
       return;
   }
   e.preventDefault();
 });
+
+function setMass(m) {
+  massIndex = m;
+  mass = eval('3e+' + m);
+  document.querySelector("#mass").innerHTML = '3e+' + m;
+}
 
 function changespeed(e) {
   speedvalue = e;

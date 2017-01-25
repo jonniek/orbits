@@ -7,11 +7,13 @@ var timestep = 24*3600/speedvalue
 
 var viewx = 0;
 var viewy = 0;
+var mass = 3e+24;
+var massIndex = 24;
 
 var sling = null;
 var rect;
 class Scene {
-  constructor(size = {width: 900, height: 600}, options = {zIndex: 1}) {
+  constructor(size = {width: 900, height: 600}) {
     this.objects = [];
     this.tickInterval = undefined;
     this.width = size.width;
@@ -28,6 +30,10 @@ class Scene {
 
   addObject(object) {
     this.objects.push(object);
+  }
+
+  removeObject(obj){
+    this.objects = this.objects.filter( item => item !== obj )
   }
 
   resetObject(){
@@ -161,6 +167,10 @@ class Body {
   updateV(x, y){
   	this.options.vx += x / this.options.mass * timestep;
   	this.options.vy += y / this.options.mass * timestep;
+    if (Math.sqrt(Math.pow(this.options.vy, 2) + Math.pow(this.options.vx, 2) )> 299792458){
+      console.log("Error exceeded speed of light", Math.sqrt(Math.pow(this.options.vy, 2) + Math.pow(this.options.vx, 2) ))
+
+    }
   	this.updateP();
   }
 
@@ -207,11 +217,12 @@ class Slingshot {
     });
   }
 
+
   shoot(){
-  	let size = Math.random()*6 + 1;
+  	let size = massIndex/2 - 9 + Math.random()*3;
   	let body = new Body({
-		  name: "Body",
-		  mass: Math.pow(size,25),
+		  name: randomName(Math.ceil(Math.random()*5) + 3),
+		  mass: mass,
 		  vx: (this.options.px - this.options.px2) * 500,
 		  vy: (this.options.py - this.options.py2) * 500,
 		  px: (this.options.px-scene.canvas.width/2 - viewx) /SCALE,
@@ -237,6 +248,16 @@ class Slingshot {
   }
 }
 
+function randomName(length){
+  return "asd";
+  let x = "";
+  let possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for(let i = 0; i < length; i++){
+    x += possible.charAt(Math.floor(Math.random() * possible.length));
+    if (i==0) x.toUpperCase();
+  }
+  return x;
+}
 
 const scene = new Scene();
 scene.sling();
@@ -434,15 +455,58 @@ $(window).keydown(function(e) {
         viewy -= 10;
         break;
       case 82:
+        setMass(24);
         setState(1);
         break;
       case 80:
         running = !running;
         break;
+
+      case 72:
+        scene.removeObject();
+        break;
+
+      case 48:
+        setMass(18);
+        break;
+      case 49:
+        setMass(20);
+        break;
+      case 50:
+        setMass(22);
+        break;
+      case 51:
+        setMass(24);
+        break;
+      case 52:
+        setMass(26);
+        break;
+      case 53:
+        setMass(28);        
+        break;
+      case 54:
+        setMass(30);
+        break;
+      case 55:
+        setMass(32);
+        break;
+      case 56:
+        setMass(34);
+        break;
+      case 57:
+        setMass(36);
+        break;
+
     	default: return;
     }
     e.preventDefault();
 });
+
+function setMass(m){
+  massIndex = m;
+  mass = eval('3e+'+m)
+  document.querySelector("#mass").innerHTML = '3e+'+m;
+}
 
 function changespeed(e){
   speedvalue = e;
