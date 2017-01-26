@@ -24,7 +24,6 @@
 		.overlay{
 			position: absolute;
 			left:10px;
-			top:10px;
 			font-size: 15pt;
 			font-family: "sans";
 			text-align: left;
@@ -38,11 +37,25 @@
 		  user-select: none; 
 		  cursor: default;
 		}
+		.overlay.menu{
+			top:10px;
+		}
 		.overlay.text{
 			left: 50px;
+			top:10px;
 		}
 		.overlay.text2{
 			left: 200px;
+			top:10px;
+		}
+		.overlay.text3{
+			left: 200px;
+			bottom: 10px;
+			text-align: center;
+			border-left: 3px solid white;
+			border-right: 3px solid white;
+			width: 100px;
+			height: 20px;
 		}
 		#menuitems{display: none;}
 		#canvas{
@@ -67,8 +80,9 @@
 
 	<div id="mass" class="overlay text">3e+24</div>
 	<div id="time" class="overlay text2">9 earthdays / second</div>
+	<!-- <div id="scale" class="overlay text3">1 AU</div> -->
 	<canvas id="canvas" width="800" height="800"></canvas>
-	<div class="overlay">
+	<div class="overlay menu">
 		<img id="menu" src="assets/ham.svg">
 		<div id="menuitems">
 			<div>[Click and drag] - shoot planetary bodies</div>
