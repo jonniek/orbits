@@ -289,7 +289,6 @@ var Slingshot = function () {
 }();
 
 function randomName(length) {
-  return "asd";
   var x = "";
   var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
   for (var i = 0; i < length; i++) {
@@ -546,6 +545,7 @@ function setMass(m) {
 function changespeed(e) {
   speedvalue = e;
   timestep = 24 * 3600 / speedvalue;
+  document.querySelector("#time").innerHTML = Math.round(fps / speedvalue * 10) / 10 + 'earthdays / second';
 }
 
 function changefps(e) {
