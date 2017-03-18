@@ -1,4 +1,4 @@
-##Html 5 canvas simulation of orbits.  
+## Html 5 canvas simulation of orbits.  
 
 Every body interacts with eachother gravitationally. Simulates inner orbits as well such as moons.
 
