@@ -78,9 +78,12 @@
 		<script>
 		    window.addEventListener("load", function(){
 		      var query = new URLSearchParams(window.location.search)
-		      var el = document.querySelector('.overlay')
-		      if (el && query.get("hideui")) {
-			el.style.cssText = "display:none;"
+		      var elements = document.querySelectorAll('.overlay')
+		      
+		      if (query.get("hideui")) {
+		        elements.forEach(element => {
+		          el.style.cssText = "display:none;"
+		        })
 		      }
 		    });
 		</script>
