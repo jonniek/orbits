@@ -552,7 +552,7 @@ function changefps(e) {
   fps = e;
 }
 
-var fps = 45;
+var fps = 60;
 
 var running = false;
 
