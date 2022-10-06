@@ -75,6 +75,15 @@
 	      });
 		  });
 		</script>
+		<script>
+		    window.addEventListener("load", function(){
+		      var query = new URLSearchParams(window.location.search)
+		      var el = document.querySelector('.overlay')
+		      if (el && query.get("hideui")) {
+			el.style.cssText = "display:none;"
+		      }
+		    });
+		</script>
 	</head>
 	<body id="body">
 
